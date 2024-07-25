@@ -30,13 +30,13 @@ exports.postLogin = async (req, res, next) => {
     const user = await Signup.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(403).json({ message: "USER DOES NOT EXIST!!" });
+      return res.status(404).json({ message: "User Not Found!!" });
     }
     if (user.password !== password) {
-      return res.status(403).json({ message: "BAD CREDENTIALS!!" });
+      return res.status(401).json({ message: "User Not Authorised!!" });
     }
 
-    res.status(200).json({ message: "Login successful!" });
+    res.status(200).json({ message: "User Login successful!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
