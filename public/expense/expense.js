@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded',()=>{
-    axios.get('http://localhost:3000/expense/all')
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:3000/expense/all',{ headers : {"Authorization" : token}})
     .then((res)=>{
         const expenseArr = res.data;
         for(let i=0;i<expenseArr.length;i++){
@@ -24,8 +25,10 @@ function displayExpenses(expenseDetail){
 }
 
 function deleteExpense(expId,listItem){
+    const token = localStorage.getItem('token');
+    
     axios
-    .delete(`http://localhost:3000/expense/delete/${expId}`)
+    .delete(`http://localhost:3000/expense/delete/${expId}`,{ headers : {"Authorization" : token}})
     .then(()=>{
       listItem.remove();
     })
@@ -47,9 +50,10 @@ function handleFormSubmit(event){
         description:description,
         category:category
     }
+    const token = localStorage.getItem('token');
 
     axios
-    .post('http://localhost:3000/expense/add',obj)
+    .post('http://localhost:3000/expense/add',obj,{ headers : {"Authorization" : token}})
     .then((res)=> {
         displayExpenses(res.data.newExpense);
         console.log(res.data);
