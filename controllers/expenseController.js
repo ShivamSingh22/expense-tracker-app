@@ -3,12 +3,12 @@ const express = require('express');
 
 exports.addExpense = async (req,res,next) => {
     const {expense,description,category} = req.body;
-
     try {
         const newExpense = await Expense.create({
             amount: expense,
             description: description,
-            category: category
+            category: category,
+            userId : req.user.id
         });
         res.status(201).json({
             newExpense:newExpense
@@ -21,8 +21,8 @@ exports.addExpense = async (req,res,next) => {
 
 exports.getExpense = async (req,res,next) => {
     try {
-        const prevExpense =await Expense.findAll();
-        res.json(prevExpense);
+        const prevExpense =await Expense.findAll({where: {userId : req.user.id}});
+        res.status(200).json(prevExpense);
     } catch (error) {
         res.status(400).json({error:error.message});
     }
@@ -31,7 +31,8 @@ exports.getExpense = async (req,res,next) => {
 exports.deleteExpense = async (req,res,next) => {
     try {
         const {id}=req.params;
-        await Expense.destroy({where: {id:id}});
+     
+        await Expense.destroy({where: {id:id, userId :req.user.id} });
         res.status(200).json({message:"DELETE EXPENSE"});
     } catch (error) {
         res.status(400).json({

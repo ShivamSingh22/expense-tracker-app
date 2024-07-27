@@ -12,7 +12,8 @@ function handleFormSubmit(event){
 
     axios.post('http://localhost:3000/user/login',obj)
     .then((res)=>{
-        console.log(res);
+        console.log(res.data);
+        localStorage.setItem('token', res.data.token);
         window.location.href = "../expense/expense.html"
         messageLabel.innerHTML = res.data.message;
         event.target.reset();
