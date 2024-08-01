@@ -1,21 +1,26 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
-const authenticate = (req,res,next) => {
-    try{
+const authenticate = async (req, res, next) => {
+    try {
         const token = req.header('Authorization');
-        //console.log(token);
-        const user = jwt.verify(token, 'eferfefRandomTokenSecretKey');
-        //console.log('userID>>>>>',user.userId);
-        User.findByPk(user.userId).then(user => {
-            
-            req.user = user; //in global req object creating a key that stores user
-            next();
-        })
-    } catch(err){
-        console.log(err);
-        return res.status(401).json({success: false});
-    }
-}
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'No token provided' });
+        }
 
-module.exports = {authenticate};
+        const decoded = jwt.verify(token, 'eferfefRandomTokenSecretKey');
+        const user = await User.findByPk(decoded.userId);
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'User not found' });
+        }
+
+        req.user = user;
+        next();
+    } catch (err) {
+        console.error(err);
+        return res.status(401).json({ success: false, message: 'Authentication failed' });
+    }
+};
+
+module.exports = { authenticate };
