@@ -1,6 +1,15 @@
 const Razorpay = require('razorpay');
-const Order = require('../models/orderModel')
+const Order = require('../models/orderModel');
+const User = require('../models/userModel');
+const userController = require('./userController');
+const jwt = require("jsonwebtoken");
+
 require('dotenv').config();
+
+function generateAccessToken(id,name,ispremiumuser){
+    console.log('Signing token');
+    return jwt.sign({userId : id, username : name, ispremiumuser:ispremiumuser}, 'eferfefRandomTokenSecretKey')
+}
 
 exports.getPremium = async(req,res,next) => {
     try {
@@ -32,14 +41,19 @@ exports.getPremium = async(req,res,next) => {
 exports.postSuccessPremium = async(req,res,next) => {
     try {
         const {payment_id,order_id} = req.body;
+        const userId = req.user.userId;
         const order = await Order.findOne({where : {orderid: order_id}});
 
             const promise1 = order.update({paymentid: payment_id, status: 'SUCCESSFUL',ispremiumuser: true});
             const promise2 = req.user.update({ispremiumuser : true})
+            const promise3 = User.update(
+                { ispremiumuser: true },
+                { where: { id: order.userId } } 
+              );
             
-            Promise.all([promise1,promise2])
+            Promise.all([promise1,promise2,promise3])
             .then(()=>{
-                return res.status(202).json({success: true, message: "Transaction Successful"});
+                return res.status(202).json({success: true, message: "Transaction Successful", token: generateAccessToken(userId, undefined, true)});
             })
             .catch(error => {
                 throw new Error(error);

@@ -25,6 +25,7 @@ exports.postSignup = async (req, res, next) => {
                     username: username,
                     email: email,
                     password: hash,
+                    ispremiumuser: false
                   });
             }
         });
@@ -36,8 +37,8 @@ exports.postSignup = async (req, res, next) => {
   }
 };
 
-function generateAccessToken(id,name){
-  return jwt.sign({userId : id, username : name}, 'eferfefRandomTokenSecretKey')
+function generateAccessToken(id,name,ispremiumuser){
+  return jwt.sign({userId : id, username : name, ispremiumuser:ispremiumuser}, 'eferfefRandomTokenSecretKey')
 }
 
 exports.postLogin = async (req, res, next) => {
@@ -54,7 +55,7 @@ exports.postLogin = async (req, res, next) => {
             res.status(400).json({message: "ERROR IN BCRYPT COMPARE"});
         }else{
             if(result==true){
-                res.status(200).json({ message: "User Login successful!" , token : generateAccessToken(user.id, user.username)});
+                res.status(200).json({ message: "User Login successful!" , token : generateAccessToken(user.id, user.username,user.ispremiumuser)});
             }else if(result==false){
                 return res.status(401).json({ message: "User Not Authorised!!" });
             }
