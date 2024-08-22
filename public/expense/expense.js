@@ -39,7 +39,7 @@ function showLeaderboard() {
             const leaderboardList = document.getElementById('leaderboardList');
             leaderboardList.innerHTML = '<h1>Leaderboard</h1>';
             userLeaderboardArray.data.forEach((userDetails) => {
-                leaderboardList.innerHTML += `<li>User ID: ${userDetails.name} - Total Expense: ${userDetails.total_cost}</li>`;
+                leaderboardList.innerHTML += `<li>User ID: ${userDetails.username} - Total Expense: ${userDetails.total_cost}</li>`;
             });
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
