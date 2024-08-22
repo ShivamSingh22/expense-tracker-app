@@ -1,5 +1,3 @@
-// const Razorpay = require('razorpay');
-
 window.addEventListener('DOMContentLoaded',()=>{
     const token = localStorage.getItem('token');
     const decodedToken = parseJwt(token);
@@ -8,6 +6,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 
     if(isPremium){
         showPremiumUserMessage();
+        showLeaderboard();
     }
     
     axios
@@ -26,6 +25,29 @@ function showPremiumUserMessage(){
     premiumMembershipButton.style.visibility='hidden';
     document.getElementById('message1').innerHTML= 'YOU ARE A PREMIUM USER';
 }
+
+function showLeaderboard() {
+    const btnLeaderboard = document.createElement('input');
+    btnLeaderboard.type = "button";
+    btnLeaderboard.value = 'Show Leaderboard';
+    btnLeaderboard.onclick = async() => {
+        const token = localStorage.getItem('token');
+        try {
+            const userLeaderboardArray = await axios.get('http://localhost:3000/premium/showLeaderboard', { headers: { "Authorization": token } });
+            console.log(userLeaderboardArray.data);
+
+            const leaderboardList = document.getElementById('leaderboardList');
+            leaderboardList.innerHTML = '<h1>Leaderboard</h1>';
+            userLeaderboardArray.data.forEach((userDetails) => {
+                leaderboardList.innerHTML += `<li>User ID: ${userDetails.name} - Total Expense: ${userDetails.total_cost}</li>`;
+            });
+        } catch (error) {
+            console.error('Error fetching leaderboard:', error);
+        }
+    }
+    document.getElementById('message1').appendChild(btnLeaderboard);
+}
+
 
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
@@ -57,9 +79,8 @@ premiumMembershipButton.onclick = async function(e) {
                     alert('YOU ARE A PREMIUM USER NOW');
                     
                     showPremiumUserMessage();
+                    showLeaderboard();
                     localStorage.setItem('token', result.data.token);
-                    
-                    //window.location.href = "../login-signup/login.html"
 
                 } catch (err) {
                     console.error(err);
