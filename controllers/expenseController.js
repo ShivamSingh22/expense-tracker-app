@@ -43,8 +43,9 @@ exports.addExpense = async (req, res, next) => {
   }
 };
 
-const ITEMS_PER_PAGE = 5;
+
 exports.getExpense = async (req, res, next) => {
+  const ITEMS_PER_PAGE = Number(req.query.size);
   try {
     const page = Number(req.query.page || 1);
     let totalItems =await Expense.count({where: {userId: req.user.id}});

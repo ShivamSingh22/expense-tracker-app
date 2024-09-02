@@ -6,8 +6,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="expense.css">
-    
+    <link rel="stylesheet" href="expense.css" />
   </head>
   <body>
     <div class="container mt-5">
@@ -56,10 +55,25 @@
     >
       Buy Premium
     </button>
-    <br>
-    <button onclick="download()" id="downloadexpense">Download File</button><br>
-    <button onclick="downloadHistory()" id="downloadhistory">View Download History</button><br><br>
-    <div id="pagination"></div>
+    <br />
+    <div id="downloadButtons">
+      <button onclick="download()" id="downloadexpense">Download File</button>
+      <button onclick="downloadHistory()" id="downloadhistory">
+        View Download History
+      </button>
+    </div>
+    <div id="paginationControls">
+      <div id="pagination"></div>
+      <div id="dynamicPgn">
+        <label for="sizePgn">Rows per Page:</label>
+        <select name="sizePgn" id="sizePgn" onchange="updatePagination()">
+          <option value="5">05</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="40">40</option>
+        </select>
+      </div>
+    </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

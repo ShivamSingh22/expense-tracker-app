@@ -15,16 +15,26 @@ window.addEventListener("DOMContentLoaded", async () => {
       const page = objUrlParams.get("page") || 1;
   
       await getProducts(page);
+      updatePagination();
     } catch (err) {
       console.log(err);
     }
   });
   
+  async function updatePagination(){
+    const ITEMS_PER_PAGE = document.getElementById("sizePgn").value || 5;
+    localStorage.setItem("item_per_pg",ITEMS_PER_PAGE);
+    await getProducts(1);
+  }
+
 async function getProducts(page) {
     const token = localStorage.getItem("token");
+    const ITEMS_PER_PAGE = localStorage.getItem("item_per_pg");
+    console.log(ITEMS_PER_PAGE);
+    
     try {
       const arr = await axios.get(
-        `http://localhost:3000/expense/all?page=${page}`,
+        `http://localhost:3000/expense/all?page=${page}&size=${ITEMS_PER_PAGE}`,
         {
           headers: { Authorization: token },
         }
@@ -86,6 +96,9 @@ function showPagination({
   dotLbl.innerHTML= "...";
   const lastBtn = document.createElement('button');
   lastBtn.innerHTML = lastPage;
+  lastBtn.addEventListener('click',()=>{
+    getProducts(lastPage)
+  })
   pagination.appendChild(dotLbl);
   pagination.appendChild(lastBtn);
   }
