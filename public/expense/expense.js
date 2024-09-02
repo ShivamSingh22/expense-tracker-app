@@ -166,11 +166,11 @@ function handleFormSubmit(event){
 }
 
 function download(){
-    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:3000/expense/download', { headers: {"Authorization" : token} })
     .then((response) => {
-        if(response.status === 201){
-            //the bcakend is essentially sending a download link
-            //  which if we open in browser, the file would download
+        if(response.status === 200){
+            
             var a = document.createElement("a");
             a.href = response.data.fileUrl;
             a.download = 'myexpense.csv';
@@ -178,9 +178,8 @@ function download(){
         } else {
             throw new Error(response.data.message)
         }
-
     })
     .catch((err) => {
-        showError(err)
+        console.log(err);
     });
 }
