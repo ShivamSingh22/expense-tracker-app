@@ -43,12 +43,26 @@ exports.addExpense = async (req, res, next) => {
   }
 };
 
+const ITEMS_PER_PAGE = 5;
 exports.getExpense = async (req, res, next) => {
   try {
+    const page = Number(req.query.page || 1);
+    let totalItems =await Expense.count({where: {userId: req.user.id}});
+
     const prevExpense = await Expense.findAll({
       where: { userId: req.user.id },
+      offset: (page - 1) * ITEMS_PER_PAGE,
+      limit : ITEMS_PER_PAGE,
     });
-    return res.status(200).json(prevExpense);
+    return res.status(200).json({
+      expenses : prevExpense,
+      currentPage : page,
+      hasNextPage : ITEMS_PER_PAGE * page < totalItems,
+      nextPage : page + 1,
+      hasPreviousPage : page > 1,
+      previousPage : page-1,
+      lastPage: Math.ceil(totalItems/ITEMS_PER_PAGE),
+    });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
