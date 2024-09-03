@@ -46,8 +46,21 @@
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 
-      <ul class="list-group" id="expenseList"></ul>
-      <ul class="list-group" id="leaderboardList"></ul>
+      <table>
+        <thead>
+        <tr>
+            <th>PRICE</th>
+            <th>DESCRIPTION</th>
+            <th>CATEGORY</th>
+            <th>ACTION</th> 
+        </tr>
+    </thead>
+    <tbody id="expenseList1">
+
+    </tbody>
+    </table>
+    
+      <ol class="list-group" id="leaderboardList"></ol>
     </div>
     <button
       id="rzp-button1"
@@ -62,6 +75,7 @@
         View Download History
       </button>
     </div>
+    <ul id="historyList"></ul>
     <div id="paginationControls">
       <div id="pagination"></div>
       <div id="dynamicPgn">

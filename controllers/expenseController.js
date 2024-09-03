@@ -132,3 +132,15 @@ exports.downloadExpense = async (req, res, next) => {
     res.status(400).json({ message: "Expenses not found" });
   }
 };
+
+exports.getDownloadHistory = async(req,res) => {
+
+  try {
+    const userId = req.user.id;
+    const downloadHistoryData = await FileURLModel.findAll({where : {userId : userId}});
+    res.status(200).json({message : "success", downHist : downloadHistoryData});
+  } catch (error) {
+    console.log(error); 
+    res.status(404).json({message : "NOT FOUND", error : error.message});
+  }
+}
