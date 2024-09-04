@@ -7,6 +7,8 @@ function handleFormSubmit(e) {
     axios
     .post('http://localhost:3000/password/forgotpassword',obj)
     .then((res)=>{
+        const msglbl = document.getElementById("msglbl");
+        msglbl.innerHTML = "<h3>Password Reset Link Sent. Check EMAIL!</h3>"
         console.log(res); 
     })
     .catch((err)=>{
