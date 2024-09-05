@@ -9,7 +9,6 @@ function handleFormSubmit(e) {
     .then((res)=>{
         const msglbl = document.getElementById("msglbl");
         msglbl.innerHTML = "<h3>Password Reset Link Sent. Check EMAIL!</h3>"
-        console.log(res); 
     })
     .catch((err)=>{
         console.log("ERROR HERE" + err);

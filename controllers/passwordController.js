@@ -8,10 +8,10 @@ const ForgotPassword = require("../models/forgotPassModel");
 exports.forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    console.log(email);
+    // console.log(email);
 
     const user = await User.findOne({ where: { email: email } });
-    console.log(user);
+    // console.log(user);
 
     if (user) {
       const id = uuid.v4();
@@ -50,7 +50,7 @@ exports.forgotPassword = async (req, res, next) => {
         ],
       });
       const result = await request;
-      console.log(result.body);
+      // console.log(result.body);
 
       res
         .status(200)
@@ -120,14 +120,14 @@ exports.resetPassword = async (req, res, next) => {
 exports.updatePassword = async (req, res, next) => {
     try {
       const { newpassword } = req.body;
-      console.log("New Password:",newpassword);
+      // console.log("New Password:",newpassword);
       const { resetpasswordid } = req.params;
-      console.log("Reset Password ID:", resetpasswordid);
+      // console.log("Reset Password ID:", resetpasswordid);
       
       const resetpasswordrequest = await ForgotPassword.findOne({
         where: { id: resetpasswordid },
       });
-      console.log("Reset Password Request:", resetpasswordrequest);
+      // console.log("Reset Password Request:", resetpasswordrequest);
       if (!resetpasswordrequest) {
         return res.status(404).json({ message: "Couldn't find reset password request" });
       }

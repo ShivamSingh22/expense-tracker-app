@@ -1,0 +1,2 @@
+::1 - - [05/Sep/2024:13:46:57 +0000] "GET /expense/all?page=1&size=5 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+::1 - - [05/Sep/2024:13:46:57 +0000] "GET /expense/all?page=1&size=5 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"

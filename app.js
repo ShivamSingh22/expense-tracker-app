@@ -1,5 +1,10 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const cors=require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 
 const userRoutes = require('./routes/userRoute');
 const expenseRoutes = require('./routes/expenseRoute');
@@ -20,6 +25,12 @@ const FileURLModel = require('./models/fileUrlModel');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ extended: false }));
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),{flags : 'a'});
+
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined',{stream: accessLogStream}));
 
 app.use('/user',userRoutes);
 app.use('/expense',expenseRoutes);
@@ -42,8 +53,9 @@ FileURLModel.belongsTo(User);
 sequelize
 .sync()
 .then(result => {
-    app.listen(3000);
-    console.log("Listening on port 3000");
+    app.listen(process.env.PORT || 3000);
+    console.log(`Listening on ${process.env.PORT}`);
+    
 })
 .catch(err => {
     console.log(err);

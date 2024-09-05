@@ -27,7 +27,6 @@ async function downloadHistory() {
     const history = await axios.get("http://localhost:3000/expense/history", {
       headers: { Authorization: token },
     });
-    console.log(history.data.downHist);
     const arr= history.data.downHist;
     const ul = document.getElementById("historyList");
     const h3 = document.createElement("h3")
@@ -64,7 +63,6 @@ async function updatePagination() {
 async function getProducts(page) {
   const token = localStorage.getItem("token");
   const ITEMS_PER_PAGE = localStorage.getItem("item_per_pg");
-  console.log(ITEMS_PER_PAGE);
 
   try {
     const arr = await axios.get(
@@ -73,7 +71,6 @@ async function getProducts(page) {
         headers: { Authorization: token },
       }
     );
-    console.log(arr);
 
     const expenseData = arr.data.expenses;
     const paginationInfo = arr.data;
@@ -157,7 +154,6 @@ function showLeaderboard() {
         "http://localhost:3000/premium/showLeaderboard",
         { headers: { Authorization: token } }
       );
-      console.log(userLeaderboardArray.data);
 
       const leaderboardList = document.getElementById("leaderboardList");
       leaderboardList.innerHTML = "<h1>Leaderboard</h1>";
@@ -194,7 +190,6 @@ premiumMembershipButton.onclick = async function (e) {
       "http://localhost:3000/purchase/premiummembership",
       { headers: { Authorization: token } }
     );
-    console.log(response);
 
     var options = {
       key: response.data.key_id,
@@ -227,7 +222,6 @@ premiumMembershipButton.onclick = async function (e) {
     e.preventDefault();
 
     rzp1.on("payment.failed", async function (response) {
-      console.log(response);
       alert("Something went wrong");
       try {
         await axios.post(
@@ -316,7 +310,6 @@ function handleFormSubmit(event) {
     })
     .then((res) => {
       displayExpenses(res.data.newExpense);
-      console.log(res.data);
       event.target.reset();
     })
     .catch((err) => {

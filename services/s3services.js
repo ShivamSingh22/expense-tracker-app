@@ -23,8 +23,8 @@ function uploadToS3(data, filename) {
             console.log("s3upload error : " + err);
             reject(err);
           } else {
-            console.log("s3upload response URL: ", s3response.Location);
-            console.log("s3upload response Key: ", s3response.Key);
+            // console.log("s3upload response URL: ", s3response.Location);
+            // console.log("s3upload response Key: ", s3response.Key);
             resolve(s3response.Location);
           }
         });

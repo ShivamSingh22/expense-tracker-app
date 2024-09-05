@@ -20,7 +20,7 @@ exports.addExpense = async (req, res, next) => {
     );
 
     const totalExpense = Number(req.user.totalExpenses) + Number(expense);
-    console.log("Total expense is : " + totalExpense);
+    //console.log("Total expense is : " + totalExpense);
 
     await User.update(
       {
@@ -122,7 +122,7 @@ exports.downloadExpense = async (req, res, next) => {
     const userId = req.user.id;
     const filename = `Expense${userId}/${new Date()}.txt`;
     const fileUrl = await S3Services.uploadToS3(stringifiedExpenses, filename);
-    console.log("YE RAHA >>>>" + fileUrl);
+    //console.log("YE RAHA >>>>" + fileUrl);
     
     await FileURLModel.create({fileUrl: fileUrl, userId :userId})
     res.status(200).json({ fileUrl: fileUrl, success: true });
