@@ -29,6 +29,7 @@ async function downloadHistory() {
     });
     const arr= history.data.downHist;
     const ul = document.getElementById("historyList");
+    ul.innerHTML="";
     const h3 = document.createElement("h3")
     h3.innerHTML = "<h3>Download History</h3>"
     ul.appendChild(h3);
