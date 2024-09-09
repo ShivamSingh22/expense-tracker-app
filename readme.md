@@ -1,8 +1,13 @@
 # Expense Tracker App
 
+
+https://github.com/user-attachments/assets/0e58fb49-4d91-4294-9911-591ba1ea8e25
+
+
 ## Overview
 
 The Expense Tracker App is a powerful tool designed to help you manage and track your expenses with ease. It comes with essential features like expense listing, deletion, and advanced functionalities such as premium membership, JWT authentication, and integration with third-party services.
+
 
 ## Features
 
