@@ -8,8 +8,6 @@ const morgan = require('morgan');
 
 require('dotenv').config();
 
-
-
 const userRoutes = require('./routes/userRoute');
 const expenseRoutes = require('./routes/expenseRoute');
 const purchaseRoutes = require('./routes/purchaseRoute')
