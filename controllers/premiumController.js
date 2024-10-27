@@ -5,15 +5,12 @@ const sequelize = require('sequelize')
 
 exports.getUserLeaderboard = async (req, res, next) => {
   try {
-    
-    const leaderboardofusers = await User.findAll({
-        order: [['totalExpenses','DESC']]
-    });
+    const leaderboardofusers = await User.find()
+      .sort({ totalExpenses: -1 })
+      .select('username totalExpenses');
 
     res.status(200).json(leaderboardofusers);
-
   } catch (error) {
-
     console.log(error);
     res.status(500).json(error);
   }

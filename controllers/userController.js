@@ -5,35 +5,31 @@ const jwt = require("jsonwebtoken");
 
 const saltRounds = 10;
 
-exports.postSignup = async (req, res, next) => {
-  const { username } = req.body;
-  const { email } = req.body;
-  const { password } = req.body;
-
-  
+exports.postSignup = async (req, res) => {
   try {
-    const existingUser = await User.findOne({ where: { email } });
+    const { username, email, password } = req.body;
 
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(403).json({ message: "ERROR: USER ALREADY EXISTS" });
-    } else {
-        bcrypt.hash(password, saltRounds, async function(err, hash) {
-            if(err){
-                return res.status(400).json({hash:"Couldn't hash error"});
-            }else{
-                await User.create({
-                    username: username,
-                    email: email,
-                    password: hash,
-                    ispremiumuser: false
-                  });
-            }
-        });
-      
-      res.status(201).json({ message: "Signup Completed!!" });
+      return res.status(403).json({ message: "User already exists" });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword
+    });
+
+    await newUser.save();
+    res.status(201).json({ message: "Successfully created new user" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -41,28 +37,38 @@ function generateAccessToken(id,name,ispremiumuser){
   return jwt.sign({userId : id, username : name, ispremiumuser:ispremiumuser}, 'eferfefRandomTokenSecretKey')
 }
 
-exports.postLogin = async (req, res, next) => {
-  const { email, password } = req.body;
-
+exports.postLogin = async (req, res) => {
   try {
-    const user = await User.findOne({ where: { email } });
+    const { email, password } = req.body;
 
+    // Find user
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User Not Found!!" });
+      return res.status(404).json({ message: "User not found" });
     }
-    bcrypt.compare(password, user.password, function(err,result){
-        if(err){
-            res.status(400).json({message: "ERROR IN BCRYPT COMPARE"});
-        }else{
-            if(result==true){
-                res.status(200).json({ message: "User Login successful!" , token : generateAccessToken(user.id, user.username,user.ispremiumuser)});
-            }else if(result==false){
-                return res.status(401).json({ message: "User Not Authorised!!" });
-            }
-        }
+
+    // Compare password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "User not authorized" });
+    }
+
+    // Generate token
+    const token = jwt.sign(
+      { 
+        userId: user._id, 
+        username: user.username,
+        ispremiumuser: user.ispremiumuser 
+      },
+      'eferfefRandomTokenSecretKey'
+    );
+
+    res.status(200).json({ 
+      message: "User logged in successfully",
+      token: token
     });
-    
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 };

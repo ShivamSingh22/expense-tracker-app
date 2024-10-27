@@ -272,7 +272,7 @@ function displayExpenses(expenseDetail) {
   tbl.appendChild(tr);
 
   deleteBtn.addEventListener("click", function () {
-    deleteExpense(expenseDetail.id, tr);
+    deleteExpense(expenseDetail._id, tr);
   });
 }
 

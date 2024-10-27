@@ -1,7 +1,8 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const cors=require('cors');
+const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
@@ -14,7 +15,6 @@ const purchaseRoutes = require('./routes/purchaseRoute')
 const premiumRoutes = require('./routes/premiumRoute');
 const passwordRoutes = require('./routes/passwordRoute');
 
-const sequelize = require('./util/database');
 
 const bodyParser = require('body-parser');
 
@@ -25,6 +25,8 @@ const ForgotPassword = require('./models/forgotPassModel');
 const FileURLModel = require('./models/fileUrlModel');
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(bodyParser.json({ extended: false }));
 
@@ -34,31 +36,25 @@ app.use(helmet());
 app.use(compression());
 app.use(morgan('combined',{stream: accessLogStream}));
 
-app.use('/user',userRoutes);
-app.use('/expense',expenseRoutes);
+// Routes
+app.use('/user', userRoutes);
+app.use('/expense', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password', passwordRoutes);
 
-User.hasMany(Expense);
-Expense.belongsTo(User);
-
-User.hasMany(Order);
-Order.belongsTo(User);
-
-User.hasMany(ForgotPassword);
-ForgotPassword.belongsTo(User);
-
-User.hasMany(FileURLModel);
-FileURLModel.belongsTo(User);
-
-sequelize
-.sync()
-.then(result => {
+// MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    console.log('Connected to MongoDB');
     app.listen(process.env.PORT || 3000);
-    console.log(`Listening on ${process.env.PORT}`);
-    
+    console.log(`Server is running on port ${process.env.PORT || 3000}`);
 })
 .catch(err => {
-    console.log(err);
-})
+    console.error('MongoDB connection error:', err);
+});
+
+module.exports = app;
