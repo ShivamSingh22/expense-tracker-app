@@ -52,6 +52,14 @@ ForgotPassword.belongsTo(User);
 User.hasMany(FileURLModel);
 FileURLModel.belongsTo(User);
 
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';"
+  );
+  next();
+});
+
 sequelize
 .sync()
 .then(result => {
